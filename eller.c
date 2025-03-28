@@ -8,7 +8,7 @@
 #include "eller.h"
 
 
-void ellers(maze_t* maze) {
+void ellers(maze_t* maze, int print) {
 
         int row = 0;
         int id = 0;
@@ -37,8 +37,10 @@ void ellers(maze_t* maze) {
                 }
                 id++;
 
-                printf("Row %d horozontal combinations complete\n", row);
-                print_maze(maze);
+		if (print) {
+			printf("Row %d horozontal combinations complete\n", row);
+			print_maze(maze);
+		}
 
 		int* set_has_vertical = calloc(maze->max_sets, sizeof(int));
 
@@ -90,9 +92,10 @@ void ellers(maze_t* maze) {
 		}
 
 		free(set_has_vertical);
-
-		printf("Row %d vertical combinations complete\n", row);
-		print_maze(maze);
+		if (print) {
+			printf("Row %d vertical combinations complete\n", row);
+			print_maze(maze);
+		}
                 row++;
         }
 	// Ensure one set on last row
@@ -117,7 +120,9 @@ void ellers(maze_t* maze) {
 		id++;
 	}
 	
-	printf("Row %d horizontal combinations complete\n", row);
-	print_maze(maze);
+	if (print) {
+		printf("Row %d horizontal combinations complete\n", row);
+		print_maze(maze);
+	}
 }
 

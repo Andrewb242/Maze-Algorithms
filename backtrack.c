@@ -7,34 +7,6 @@
 #include <time.h>
 #include "backtrack.h"
 
-int left_edge(node_t* node) {
-	return node->x == 0;
-}
-int top_edge(node_t* node) {
-	return node->y == 0;
-}
-int right_edge(maze_t* maze, node_t* node) {
-	return node->x == maze->width - 1;
-}
-int bottom_edge(maze_t* maze, node_t* node) {
-	return node->x == maze->height - 1;
-}
-
-typedef struct pos_data {
-	int id;
-	int above_id;
-       	int below_id;
-	int left_id;
-	int right_id;
-	set_t* above_set;
-	set_t* below_set;
-	set_t* left_set;
-	set_t* right_set;
-	node_t* cur_node;
-	set_t* cur_set;
-	int prob_thresh;
-} pos_data_t;
-
 void calc_pos_data(maze_t* maze, pos_data_t* pos) {
 	pos->above_id = pos->id - maze->width;
 	pos->below_id = pos->id + maze->width;
@@ -84,7 +56,7 @@ void calc_pos_data(maze_t* maze, pos_data_t* pos) {
 	pos->prob_thresh == 0 ? pos->prob_thresh = 100 : pos->prob_thresh;
 }
 
-void backtrack(maze_t* maze) {
+void backtrack(maze_t* maze, int print) {
 	
 	pos_data_t pos;
 	pos.id = 0;
@@ -108,11 +80,11 @@ void backtrack(maze_t* maze) {
 
 				while (pos.prob_thresh > 100) {
 
-					printf("Current Position: (%d,%d)\n", pos.cur_node->x, pos.cur_node->y);
+					if (print) printf("Current Position: (%d,%d)\n", pos.cur_node->x, pos.cur_node->y);
 
 					if (pos.id == 0) return;
 
-					printf("Backtracking...\n");
+					if (print) printf("Backtracking...\n");
 
 					if (pos.cur_node->down && !pos.cur_node->down->visited){
 						pos.cur_node->visited = 1;
@@ -138,7 +110,7 @@ void backtrack(maze_t* maze) {
 					calc_pos_data(maze, &pos);
 
 				}
-				printf("New position: (%d,%d)\n", pos.cur_node->x, pos.cur_node->y);
+				if (print) printf("New position: (%d,%d)\n", pos.cur_node->x, pos.cur_node->y);
 			}
 		
 			if (pos.above_set && pos.above_set != pos.cur_set && rand() % 100 + 1 < pos.prob_thresh) {
@@ -185,8 +157,10 @@ void backtrack(maze_t* maze) {
 				break;
 			}
 		}
-		printf("Itteration #%d\n", itteration);
-		print_maze(maze);
+		if (print) {
+			printf("Itteration #%d\n", itteration);
+			print_maze(maze);
+		}
 		itteration++;
 	}
 }

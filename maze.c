@@ -89,6 +89,7 @@ int main() {
 
 	// Prompt user for algorithm type
 	int alg_type = 0;
+	printf("0. Time Comparison\n");
 	printf("1. Backtrack\n");
 	printf("2. Eller's\n");
 	printf("Input maze generation algorithm number: ");
@@ -98,13 +99,19 @@ int main() {
 	}
 
 	switch (alg_type) {
+		case 0:
+			printf("Time Comparison selected...\n");
+			maze_free(&new_maze);
+			time_cmp(width, height, &backtrack, "Backtrack");
+			time_cmp(width, height, &ellers, "Eller's");
+			exit(0);
 		case 1:
-			printf("Backtrack  algorithm selected.\n");
-			backtrack(&new_maze);
+			printf("Backtrack algorithm selected...\n");
+			backtrack(&new_maze, 1);
 			break;
 		case 2:
-			printf("Eller's algorithm selected.\n");
-			ellers(&new_maze);
+			printf("Eller's algorithm selected...\n");
+			ellers(&new_maze, 1);
 			break;
 		default:
 			printf("Invalid option.\n");
@@ -119,6 +126,26 @@ int main() {
         maze_free(&new_maze);
 
         return 0;
+}
+
+void time_cmp(int width, int height, void (*func) (maze_t*, int), char* name) {
+
+	clock_t start, end;
+	double cpu_time_used;
+
+	maze_t maze;
+	maze.width = width;
+	maze.height = height;
+	maze_init(&maze);
+
+	start = clock();
+	func(&maze, 0);
+	end = clock();
+
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+	printf("%s algorithm finished with time %lf seconds\n", name, cpu_time_used);
+	maze_free(&maze);
 }
 
 void print_maze(maze_t* maze) {

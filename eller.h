@@ -8,6 +8,6 @@
 #ifndef ELLER_H
 #define ELLER_H
 
-void ellers(maze_t* maze);
+void ellers(maze_t* maze, int print);
 
 #endif /* ELLER_H */

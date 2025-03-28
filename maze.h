@@ -27,6 +27,7 @@ typedef struct maze {
 	node_t* end;
 } maze_t;
 
+void time_cmp(int width, int height, void (*func) (maze_t*, int), char* name);
 void print_maze(maze_t* maze);
 
 #endif // MAZE_H
