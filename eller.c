@@ -48,7 +48,7 @@ void ellers(maze_t* maze) {
 			node_t* above_node = maze->cells[temp_id - maze->width];
 			set_t* cur_set = cur_node->set;
 			set_t* above_set = above_node->set;
-			if (cur_set && above_set && cur_set != above_set && rand() % 100 + 1 < 30) {
+			if (cur_set && above_set && cur_set != above_set && rand() % 100 + 1 < 45) {
 				// Combine the sets
 				maze->sets[cur_set->id] = NULL;
 				set_union(above_set, cur_set);
@@ -116,5 +116,8 @@ void ellers(maze_t* maze) {
 		}
 		id++;
 	}
+	
+	printf("Row %d horizontal combinations complete\n", row);
+	print_maze(maze);
 }
 

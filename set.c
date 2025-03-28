@@ -39,27 +39,15 @@ void set_add(set_t* set, node_t* node) {
 set_t* set_union(set_t* set_a, set_t* set_b) {
 	
 	node_t* cur = set_b->head;
-	int set_a_id = set_a->id;
+	node_t* prev = NULL;
 
 	while (cur) {
-		cur->set = set_a;
-		cur->set_id = set_a_id;
-		set_a->member_count++;
+		prev = cur;
                 cur = cur->next;
+		set_add(set_a, prev);
         }
 
-	cur = set_a->head;
-
-	if (!set_a->head) {
-		set_a->head = set_b->head;
-	} else {
-		node_t* tail = set_a->head;
-		while (tail->next) {
-			tail = tail->next;
-		}
-		tail->next = set_b->head;
-	}
-	free(set_b);
+	set_b->head = NULL;
 	return set_a;
 }
 

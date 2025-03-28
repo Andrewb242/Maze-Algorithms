@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -O2
 
 # Source files: include eller.c which now has arguments and any other sources like set.c.
-SRCS = maze.c eller.c set.c 
+SRCS = maze.c eller.c set.c backtrack.c
 
 # Object files: automatically derived from source file names.
 OBJS = $(SRCS:.c=.o)

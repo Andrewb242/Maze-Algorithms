@@ -3,47 +3,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include "eller.h"
+#include "backtrack.h"
 
-
-/*
- * Parse command line arguments and initialize maze parameters
- * Expected format: ./eller width height [output_file]
- * Returns 0 on success, non-zero on failure
- */
-int parse_arguments(int argc, char *argv[], int *width, int *height, char **output_file) {
-	// Set default values
-	*output_file = NULL;
-
-	// Check for minimum required arguments (program name, width, height)
-	if (argc < 3) {
-		fprintf(stderr, "Usage: %s width height [output_file]\n", argv[0]);
-		return 1;
-	}
-
-	// Parse width
-	*width = atoi(argv[1]);
-	if (*width <= 0) {
-		fprintf(stderr, "Error: Width must be a positive integer\n");
-		return 1;
-	}
-
-	// Parse height
-	*height = atoi(argv[2]);
-	if (*height <= 0) {
-		fprintf(stderr, "Error: Height must be a positive integer\n");
-		return 1;
-	}
-
-	// Parse optional output file
-	if (argc >= 4) {
-		*output_file = argv[3];
-	}
-
-	return 0;
-}
-
-
-
+	
 // Maze Initialization
 void maze_init(maze_t* maze){
 
@@ -89,6 +51,9 @@ void maze_init(maze_t* maze){
                 maze->sets[i] = new_set;
                 maze->set_count++;
         }
+
+	maze->start = maze->cells[0];
+	maze->end = maze->cells[maze->set_count - 1];
 }
 
 void maze_free(maze_t* maze) {
@@ -98,24 +63,19 @@ void maze_free(maze_t* maze) {
         }
 }
 
-int main(int argc, char *argv[]) {
+int main() {
         // Seed random number generator
         srand(time(NULL));
 
-        // Parse command line arguments
         int width, height;
-        char *output_file;
+	
+	printf("Input a positive integer for maze width:");
+	if (scanf("%d", &width) == 0) return 1;
 
-        if (parse_arguments(argc, argv, &width, &height, &output_file) != 0) {
-                return 1;  // Exit if argument parsing failed
-        }
+	printf("Input a positive integer for maze height:");
+	if (scanf("%d", &height) == 0) return 1;
 
         printf("Generating maze with width %d and height %d\n", width, height);
-        if (output_file) {
-                printf("Output will be written to %s\n\n", output_file);
-        } else {
-                printf("Output will be written to standard output\n\n");
-        }
 
         // Initialize the maze
 
@@ -129,7 +89,8 @@ int main(int argc, char *argv[]) {
 
 	// Prompt user for algorithm type
 	int alg_type = 0;
-	printf("1. Eller's\n");
+	printf("1. Backtrack\n");
+	printf("2. Eller's\n");
 	printf("Input maze generation algorithm number: ");
 	if (scanf("%d", &alg_type) == 0) {
 		perror("Scan failed\n");	
@@ -138,6 +99,10 @@ int main(int argc, char *argv[]) {
 
 	switch (alg_type) {
 		case 1:
+			printf("Backtrack  algorithm selected.\n");
+			backtrack(&new_maze);
+			break;
+		case 2:
 			printf("Eller's algorithm selected.\n");
 			ellers(&new_maze);
 			break;
@@ -163,7 +128,8 @@ void print_maze(maze_t* maze) {
         }
 
         // Print top border
-        for (int x = 0; x < maze->width; x++) {
+	printf("+   ");
+        for (int x = 0; x < maze->width - 1; x++) {
                 printf("+---");
         }
         printf("+\n");
@@ -208,9 +174,9 @@ void print_maze(maze_t* maze) {
         }
 
         // Print bottom border
-        for (int x = 0; x < maze->width; x++) {
+        for (int x = 0; x < maze->width - 1; x++) {
                 printf("+---");
         }
-        printf("+\n");
+        printf("+   +\n");
 }
 
