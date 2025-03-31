@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "eller.h"
 
 
@@ -12,6 +13,7 @@ void ellers(maze_t* maze, int print) {
 
         int row = 0;
         int id = 0;
+
 	// Horizontal Combinations
         while (row < maze->height - 1) {
 
@@ -92,12 +94,14 @@ void ellers(maze_t* maze, int print) {
 		}
 
 		free(set_has_vertical);
+
 		if (print) {
 			printf("Row %d vertical combinations complete\n", row);
 			print_maze(maze);
 		}
                 row++;
         }
+
 	// Ensure one set on last row
 	for (int col = 0; col < maze->width - 1; col++) {
 

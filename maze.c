@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "eller.h"
+#include "kruskal.h"
 #include "backtrack.h"
 
 	
@@ -63,11 +64,12 @@ void maze_free(maze_t* maze) {
         }
 }
 
+static int width;
+static int height;
+
 int main() {
         // Seed random number generator
         srand(time(NULL));
-
-        int width, height;
 	
 	printf("Input a positive integer for maze width:");
 	if (scanf("%d", &width) == 0) return 1;
@@ -92,6 +94,7 @@ int main() {
 	printf("0. Time Comparison\n");
 	printf("1. Backtrack\n");
 	printf("2. Eller's\n");
+	printf("3. Kruskal's\n");
 	printf("Input maze generation algorithm number: ");
 	if (scanf("%d", &alg_type) == 0) {
 		perror("Scan failed\n");	
@@ -102,8 +105,9 @@ int main() {
 		case 0:
 			printf("Time Comparison selected...\n");
 			maze_free(&new_maze);
-			time_cmp(width, height, &backtrack, "Backtrack");
-			time_cmp(width, height, &ellers, "Eller's");
+			time_cmp(&backtrack, "Backtrack");
+			time_cmp(&ellers, "Eller's");
+			time_cmp(&kruskal, "Kruskal's");
 			exit(0);
 		case 1:
 			printf("Backtrack algorithm selected...\n");
@@ -112,6 +116,9 @@ int main() {
 		case 2:
 			printf("Eller's algorithm selected...\n");
 			ellers(&new_maze, 1);
+			break;
+		case 3: printf("Kruskal's Algorithm selected...\n");
+			kruskal(&new_maze, 1);
 			break;
 		default:
 			printf("Invalid option.\n");
@@ -128,7 +135,7 @@ int main() {
         return 0;
 }
 
-void time_cmp(int width, int height, void (*func) (maze_t*, int), char* name) {
+void time_cmp(void (*func) (maze_t*, int), char* name) {
 
 	clock_t start, end;
 	double cpu_time_used;
